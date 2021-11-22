@@ -35,7 +35,7 @@ const session = new Session(
 // create new stage. you can fill with multiple stage. 
 const stage = new Stage([session])
 // use stage as middleware. 
-bot.use(stage.middleware)
+bot.use(stage.middleware())
 // start command
 bot.start(ctx => ctx.reply('Started!'));
 // if user send /login bot will running the current stage. 
