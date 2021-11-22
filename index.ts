@@ -1,6 +1,6 @@
 // Don't sale this source.
 // Copyright (C) 2021 Butthx <https://github.com/butthx>
-// Create at Monday 1 November 2021.
+// Create at Monday 22 November 2021.
 // This source is a free software : you can redistribute it and/or modify
 //  it under the terms of the MIT License as published.
 type MaybePromise<T> = T | Promise<T>;
