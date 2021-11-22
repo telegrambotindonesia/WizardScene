@@ -1,0 +1,14 @@
+{
+  "timeZone": "Asia/Bangkok",
+  "dependencies": {
+    "libraries": [
+      {
+        "userSymbol": "lumpia",
+        "version": "8",
+        "libraryId": "1Yo6vQRwjG5Gl9jeEF0g2tBTUa0XN5MyT4G_HeDpRr9DvabxhRcSdhPNj"
+      }
+    ]
+  },
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8"
+}
