@@ -18,7 +18,7 @@ function doPost(e) {
   bot.doPost(e);
 }
 // create new session
-const session = new Session(
+const session = new Scene(
   "session_one",// id to define the session you can fill with anything 
   // step handle 
   (ctx) => {
