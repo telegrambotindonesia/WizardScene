@@ -1,0 +1,10 @@
+{
+  "entryPoints": ["index.ts"],
+  "out": "docs",
+  "name": "WizardScene",
+  "includeVersion": true,
+  "hideGenerator": true,
+  "emit": true,
+  "logger": "verbose",
+  "sort": "alphabetical"
+}
