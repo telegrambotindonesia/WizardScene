@@ -47,6 +47,12 @@ class _scene {
    */
   handler!: Array<ContextFn>;
   /**
+   * How long will the cache be kept? in seconds.
+   * @type {number}
+   * @default 3600
+   */
+  cacheTime: number = 3600;
+  /**
    * @constructor
    * Scene constructor.
    * @param {string} id - The scene identification, it must be different every scene. One id only can be use with One scene, to prevent error or malfunction.
@@ -71,7 +77,7 @@ class _scene {
     return cache.put(
       `${this.id.replace(/\s+/g, '').toLowerCase()}${data.userId}${data.chatId}`,
       JSON.stringify(data),
-      3600
+      this.cacheTime
     );
   }
   /**
