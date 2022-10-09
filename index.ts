@@ -1,28 +1,65 @@
-// Don't sale this source.
-// Copyright (C) 2021 Butthx <https://github.com/butthx>
-// Create at Monday 22 November 2021.
-// This source is a free software : you can redistribute it and/or modify
-//  it under the terms of the MIT License as published.
+/** @copyright
+ * Don't sale this source.
+ * Copyright (C) 2021 Butthx <https://github.com/butthx>
+ * Create at Monday 22 November 2021.
+ * This source is a free software : you can redistribute it and/or modify
+ * it under the terms of the MIT License as published.
+ */
 type MaybePromise<T> = T | Promise<T>;
-// ctx:any because i can't import context from lumpia. it should be const {Context} = lumpia, but its undefined.
 type ContextFn = (ctx: any) => MaybePromise<void>;
 interface DataScene {
+  /**
+   * Who was inside the scene?
+   */
   userId: number;
+  /**
+   * Where he running the scene?
+   */
   chatId: number;
+  /**
+   * Whetever scene is running or not.
+   */
   sceneRunning: boolean;
+  /**
+   * Content of scene
+   */
   sceneData: any;
+  /**
+   * Index of Content in the scene
+   */
   sceneIndex: number;
 }
 interface StageOptions {
+  /**
+   * The scene id will be running.
+   */
   defaultSceneId?: string;
 }
 class _scene {
+  /**
+   * The scene identification.
+   * @type {string}
+   */
   id!: string;
+  /**
+   * All Content of scene available at here.
+   * @type {ContextFn[]}
+   */
   handler!: Array<ContextFn>;
+  /**
+   * @constructor
+   * Scene constructor.
+   * @param {string} id - The scene identification, it must be different every scene. One id only can be use with One scene, to prevent error or malfunction.
+   * @param {ContextFn[]} - The scene handler, it must be an array of function. The function should be according to ContextFn.
+   */
   constructor(id: string, ...handler: Array<ContextFn>) {
     this.id = id;
     this.handler = handler;
   }
+  /**
+   * Save or update the data in scene.
+   * @param {DataScene} data - Data will be saved into scene.
+   */
   save(data: DataScene) {
     let cache = CacheService.getScriptCache();
     if (!data.sceneRunning) {
@@ -37,6 +74,11 @@ class _scene {
       3600
     );
   }
+  /**
+   * Find any saved data which is matches with filters.
+   * @param {number} userId - Filter with user identification.
+   * @param {number} chatId - Filter with chat identification.
+   */
   find(userId: number, chatId: number) {
     let cache = CacheService.getScriptCache();
     let data = cache.get(`${this.id.replace(/\s+/g, '').toLowerCase()}${userId}${chatId}`);
@@ -47,13 +89,28 @@ class _scene {
   }
 }
 class _stage {
+  /**
+   * The available scenes.
+   * @type {Map<string,_scene>}
+   */
   scenes: Map<string, _scene> = new Map();
+  /**
+   * The current update context from lumpia.
+   */
   ctx!: any;
+  /**
+   * @constructor
+   * The Stage constructor.
+   * @param {_scene[]} scenes - Array of scenes.
+   */
   constructor(_scenes: Array<_scene>) {
     for (let scene of _scenes) {
       this.scenes.set(scene.id as string, scene as _scene);
     }
   }
+  /**
+   * Middleware function will be running in lumpia framework.
+   */
   middleware() {
     return (ctx, next) => {
       this.ctx = ctx;
@@ -75,6 +132,10 @@ class _stage {
       return next();
     };
   }
+  /**
+   * Run the scene which is matches with given id.
+   * @param {string} sceneId - The scene identification.
+   */
   enter(sceneId: string) {
     if (!this.ctx) {
       throw new Error(`ctx is undefined. please setup middleware first`);
@@ -104,6 +165,9 @@ class _stage {
       return scene.handler[0](this.ctx);
     }
   }
+  /**
+   * Exit from running scene.
+   */
   leave() {
     for (let [id, scene] of this.scenes) {
       let dataScene = scene.find(this.ctx.from.id, this.ctx.chat.id);
@@ -115,6 +179,9 @@ class _stage {
       }
     }
   }
+  /**
+   * Go to the next index of handler in running scene.
+   */
   next() {
     for (let [id, scene] of this.scenes) {
       let dataScene = scene.find(this.ctx.from.id, this.ctx.chat.id);
@@ -128,6 +195,9 @@ class _stage {
       }
     }
   }
+  /**
+   * Go to -1 index of handler in running scene.
+   */
   back() {
     for (let [id, scene] of this.scenes) {
       let dataScene = scene.find(this.ctx.from.id, this.ctx.chat.id);
@@ -141,6 +211,10 @@ class _stage {
       }
     }
   }
+  /**
+   * Change the index as you wish of handler in running scene.
+   * The index start from zero and no more than the number of available handlers.
+   */
   cursor(sceneIndex: number) {
     for (let [id, scene] of this.scenes) {
       let dataScene = scene.find(this.ctx.from.id, this.ctx.chat.id);

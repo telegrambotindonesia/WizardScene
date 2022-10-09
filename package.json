@@ -1,5 +1,5 @@
 {
-  "name": "gas",
+  "name": "WizardScene",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "git@github.com:telegrambotindonesia/WizardScene",
@@ -11,5 +11,6 @@
   },
   "dependencies": {
     "prettier": "^2.4.1"
-  }
+  },
+  "packageManager": "yarn@3.2.4"
 }
